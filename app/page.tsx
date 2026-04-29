@@ -1,3 +1,5 @@
+import { headers } from 'next/headers';
+
 interface UserStats {
   followers: number;
   following: number;
@@ -26,8 +28,16 @@ interface UserProfileResponse {
 }
 
 async function getMockUserData(): Promise<UserProfileResponse> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000';
-  const response = await fetch(`${baseUrl}/api/mock/user`, { cache: 'no-store' });
+  const requestHeaders = await headers();
+  const forwardedProto = requestHeaders.get('x-forwarded-proto');
+  const host = requestHeaders.get('x-forwarded-host') ?? requestHeaders.get('host');
+  const protocol = forwardedProto ?? (host?.startsWith('localhost') ? 'http' : 'https');
+
+  if (!host) {
+    throw new Error('无法确定当前请求主机，无法请求 mock 用户信息');
+  }
+
+  const response = await fetch(`${protocol}://${host}/api/mock/user`, { cache: 'no-store' });
 
   if (!response.ok) {
     throw new Error('获取 mock 用户信息失败');
