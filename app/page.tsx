@@ -2,53 +2,7 @@ import { Header } from '@/components/Header';
 import { ProductShowcase } from '@/components/ProductShowcase';
 import { ShoppingCart } from '@/components/ShoppingCart';
 import { products } from '@/lib/products';
-import { headers } from 'next/headers';
-
-interface UserStats {
-  followers: number;
-  following: number;
-  posts: number;
-}
-
-interface UserTag {
-  id: string;
-  label: string;
-  color: 'blue' | 'emerald' | 'violet' | 'amber';
-}
-
-interface UserProfileResponse {
-  code: number;
-  message: string;
-  traceId: string;
-  data: {
-    userId: string;
-    nickname: string;
-    email: string;
-    roles: string[];
-    stats: UserStats;
-    tags: UserTag[];
-    updatedAt: string;
-  };
-}
-
-async function getMockUserData(): Promise<UserProfileResponse> {
-  const requestHeaders = await headers();
-  const forwardedProto = requestHeaders.get('x-forwarded-proto');
-  const host = requestHeaders.get('x-forwarded-host') ?? requestHeaders.get('host');
-  const protocol = forwardedProto ?? (host?.startsWith('localhost') ? 'http' : 'https');
-
-  if (!host) {
-    throw new Error('无法确定当前请求主机，无法请求 mock 用户信息');
-  }
-
-  const response = await fetch(`${protocol}://${host}/api/mock/user`, { cache: 'no-store' });
-
-  if (!response.ok) {
-    throw new Error('获取 mock 用户信息失败');
-  }
-
-  return response.json();
-}
+import { getCurrentUserProfile, type UserTag } from '@/lib/services/user';
 
 const tagColorMap: Record<UserTag['color'], string> = {
   blue: 'bg-blue-500/20 text-blue-300 border-blue-400/40',
@@ -58,7 +12,7 @@ const tagColorMap: Record<UserTag['color'], string> = {
 };
 
 export default async function Home() {
-  const user = await getMockUserData();
+  const user = await getCurrentUserProfile();
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-800 p-8">
