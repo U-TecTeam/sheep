@@ -134,8 +134,8 @@ export default function PostDetail() {
           <div className="pt-10 space-y-6">
             <h3 className="text-sm font-bold uppercase tracking-widest">{t('comments')}</h3>
             <div className="flex gap-4">
-              <div className="w-10 h-10 rounded-full bg-gray-100 overflow-hidden shrink-0">
-                <img src="https://i.pravatar.cc/150?u=current" alt="Current User" />
+              <div className="relative w-10 h-10 rounded-full bg-gray-100 overflow-hidden shrink-0">
+                <Image src="https://i.pravatar.cc/150?u=current" alt="Current User" fill className="object-cover" />
               </div>
               <input 
                 type="text" 
@@ -175,6 +175,12 @@ export default function PostDetail() {
               </button>
             </div>
           </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+div>
         )}
       </AnimatePresence>
     </div>

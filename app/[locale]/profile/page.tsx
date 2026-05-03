@@ -31,6 +31,8 @@ export default function ProfilePage() {
     fetchOrders();
   }, []);
 
+  if (loading) return <div className="min-h-screen bg-[#FBFBFB] flex items-center justify-center font-black text-gray-300">LOADING...</div>;
+
   const handleConfirmReceipt = async (orderId: string) => {
     const { error } = await supabase.from('orders').update({ status: 'delivered' }).eq('id', orderId);
     if (!error) {
@@ -127,7 +129,7 @@ export default function ProfilePage() {
                   <div className="pt-4 border-t border-gray-50">
                     <p className="text-xs font-bold text-gray-400 mb-2">ITEMS</p>
                     <div className="flex flex-wrap gap-2">
-                      {order.items.map((item: any) => (
+                      {order.items.map((item: OrderItem) => (
                         <span key={item.id} className="px-3 py-1 bg-gray-50 rounded-lg text-[10px] font-bold">
                           {item.name} x {item.quantity}
                         </span>
@@ -210,8 +212,8 @@ export default function ProfilePage() {
                 })}
               </div>
               
-              <div className="aspect-square rounded-2xl overflow-hidden grayscale">
-                <img src={items[0]?.product.image || "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=500"} alt="Poster Product" className="w-full h-full object-cover" />
+              <div className="relative aspect-square rounded-2xl overflow-hidden grayscale">
+                <Image src={items[0]?.product.image || "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=500"} alt="Poster Product" fill className="object-cover" />
               </div>
 
               <div className="space-y-4">
@@ -259,6 +261,16 @@ export default function ProfilePage() {
             <Plus size={24} />
           </button>
         </section>
+      </main>
+    </div>
+  );
+}
+    </section>
+      </main>
+    </div>
+  );
+}
+   </section>
       </main>
     </div>
   );

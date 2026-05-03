@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ChevronLeft, Camera, Thermometer, Timer, Coffee, Send, Loader2 } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { supabase } from '@/lib/supabase';
 

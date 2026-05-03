@@ -179,10 +179,10 @@ export default function ProductDetails() {
                 <button 
                   key={size.id}
                   onClick={() => setSelectedGrind(size.id)}
-                  className={`p-4 rounded-[1.5rem] border-2 text-left transition-all flex items-center gap-4 ${selectedGrind === size.id ? 'border-black bg-gray-50 shadow-sm' : 'border-gray-100 hover:border-gray-300'}`}
+                  className={`p-4 rounded-[1.5rem] border-2 text-left transition-all flex items-center gap-4 ${selectedGrind === size.id ? 'border-black bg-gray-50 shadow-sm' : 'border-gray-100 hover:border-black hover:border-gray-300'}`}
                 >
-                  <div className="w-12 h-12 rounded-xl overflow-hidden grayscale">
-                    <img src={size.img} alt={size.label} className="w-full h-full object-cover" />
+                  <div className="relative w-12 h-12 rounded-xl overflow-hidden grayscale">
+                    <Image src={size.img} alt={size.label} fill className="object-cover" />
                   </div>
                   <div className="flex-1">
                     <p className="text-sm font-bold leading-tight">{size.label}</p>
@@ -212,5 +212,8 @@ function PlusIcon() {
     <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center text-black">
       <Plus size={16} />
     </div>
+  );
+}
+iv>
   );
 }

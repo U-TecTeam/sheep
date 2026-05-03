@@ -85,7 +85,9 @@ const PostCard = ({ post, allProducts }: { post: Post, allProducts: Product[] })
         
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={post.author.avatar} alt={post.author.name} className="w-6 h-6 rounded-full" />
+            <div className="relative w-6 h-6 rounded-full overflow-hidden">
+              <Image src={post.author.avatar} alt={post.author.name} fill className="object-cover" />
+            </div>
             <span className="text-xs font-bold text-gray-900">{post.author.name}</span>
           </div>
           <div className="flex items-center gap-4 text-gray-400">

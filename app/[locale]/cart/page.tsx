@@ -120,7 +120,9 @@ export default function CartPage() {
           ) : (
             items.map((item) => (
               <div key={`${item.product.id}-${item.purchaseType}`} className="bg-white p-6 rounded-[2rem] shadow-sm flex gap-6 items-center">
-                <img src={item.product.image} className="w-20 h-20 rounded-2xl object-cover" />
+                <div className="relative w-20 h-20 rounded-2xl overflow-hidden">
+                  <Image src={item.product.image} alt={item.product.name} fill className="object-cover" />
+                </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex justify-between items-start">
                     <h3 className="font-bold truncate">{item.product.name}</h3>

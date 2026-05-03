@@ -57,6 +57,8 @@ export default function AdminDashboard() {
     { label: t('trending'), value: 'Yirgacheffe', change: 'Top 1', icon: TrendingUp },
   ];
 
+  if (loading) return <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center font-black text-gray-300">LOADING...</div>;
+
   return (
     <div className="min-h-screen bg-[#F8F9FA] font-['Space_Grotesk'] text-black flex">
       {/* Sidebar */}
@@ -70,12 +72,11 @@ export default function AdminDashboard() {
             { id: 'orders', name: t('orders'), icon: BarChart3 },
             { id: 'posts', name: t('posts'), icon: MessageSquare },
           ].map((item) => (
-            <button 
-              key={item.id}
-              onClick={() => item.id !== 'posts' && setActiveTab(item.id as any)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === item.id ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:bg-gray-50 hover:text-black'}`}
-            >
-              <item.icon size={18} />
+          <button 
+            key={item.id}
+            onClick={() => setActiveTab(item.id as any)}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === item.id ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:bg-gray-50 hover:text-black'}`}
+          >              <item.icon size={18} />
               {item.name}
             </button>
           ))}
@@ -164,7 +165,9 @@ export default function AdminDashboard() {
                     <tr key={product.id} className="group hover:bg-gray-50/30 transition-colors">
                       <td className="px-8 py-6">
                         <div className="flex items-center gap-4">
-                          <img src={product.image} className="w-10 h-10 rounded-lg object-cover" />
+                          <div className="relative w-10 h-10 rounded-lg overflow-hidden">
+                            <Image src={product.image} alt={product.name} fill className="object-cover" />
+                          </div>
                           <span className="font-bold text-sm">{product.name}</span>
                         </div>
                       </td>
@@ -239,6 +242,12 @@ export default function AdminDashboard() {
               </table>
             </div>
           </section>
+        )}
+      </main>
+    </div>
+  );
+}
+/section>
         )}
       </main>
     </div>

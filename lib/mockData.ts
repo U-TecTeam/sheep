@@ -28,6 +28,24 @@ export interface Post {
   relatedProductId?: string;
 }
 
+export interface OrderItem {
+  id: string;
+  name: string;
+  quantity: number;
+  purchaseType: string;
+}
+
+export interface Order {
+  id: string;
+  user_id: string;
+  items: OrderItem[];
+  total_amount: number;
+  status: string;
+  shipping_address: any;
+  created_at: string;
+  updated_at: string;
+}
+
 export const mockProducts: Product[] = [
   {
     id: '1',

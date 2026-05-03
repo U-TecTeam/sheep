@@ -1,9 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
-import { X, Mail, Lock, User, Coffee, ArrowRight, Loader2 } from 'lucide-react';
+import { X, Mail, Lock, Coffee, ArrowRight, Loader2 } from 'lucide-react';
 import { SiGithub } from 'react-icons/si';
 import { useTranslations } from 'next-intl';
 
