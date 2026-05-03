@@ -1,0 +1,131 @@
+{
+  "Navigation": {
+    "discovery": "Discovery",
+    "market": "Market",
+    "subscription": "Subscription",
+    "online": "Online",
+    "shopping_cart": "Shopping Cart",
+    "close": "Close"
+  },
+  "Home": {
+    "personalized": "Personalized for you",
+    "hero_title": "DISCOVER YOUR NEXT <spanTag>FAVORITE</spanTag> BREW.",
+    "tags": {
+      "all": "All",
+      "recipes": "Recipes",
+      "reviews": "Reviews",
+      "unboxing": "Unboxing",
+      "tutorials": "Tutorials"
+    }
+  },
+  "Auth": {
+    "welcome_back": "Welcome Back",
+    "create_account": "Create Account",
+    "login_desc": "Login to manage your subscriptions and brewing notes",
+    "signup_desc": "Join the global coffee lover community",
+    "email": "Email Address",
+    "password": "Password",
+    "login_btn": "LOGIN",
+    "signup_btn": "SIGN UP",
+    "or_continue": "Or continue with",
+    "no_account": "No account yet?",
+    "has_account": "Already have an account?",
+    "register_now": "Register Now",
+    "return_login": "Back to Login",
+    "verify_email": "Please go to your email to verify your account!"
+  },
+  "TasteTest": {
+    "test": "Taste Test",
+    "step": "Step {current} of {total}",
+    "complete_title": "Test Completed!",
+    "complete_desc": "Your exclusive coffee flavor profile has been generated. Go check it out in the discovery page.",
+    "questions": {
+      "fruit": {
+        "title": "What kind of fruit sweetness do you like?",
+        "options": {
+          "citrus": "Citrus/Lemon (Acidic)",
+          "berry": "Berries/Strawberry (Balanced)",
+          "grape": "Grape/Chocolate (Sweet)"
+        }
+      },
+      "body": {
+        "title": "What kind of mouthfeel do you prefer?",
+        "options": {
+          "tea": "Refreshing like tea",
+          "smooth": "Smooth and silky",
+          "heavy": "Heavy like wine or hot cocoa"
+        }
+      },
+      "roast": {
+        "title": "What is your usual roast preference?",
+        "options": {
+          "light": "Light (Retains floral and fruity aromas)",
+          "medium": "Medium (Balanced nutty and chocolatey feel)",
+          "dark": "Dark (Rich and slightly bitter, no acidity)"
+        }
+      }
+    }
+  },
+  "Community": {
+    "loading": "Loading your feed...",
+    "buy_now": "Shop same style: {name}",
+    "once": "Once",
+    "subscription": "Subscription (10% off)",
+    "add_to_cart": "Add to Cart"
+  },
+  "Cart": {
+    "free_shipping_threshold": "Free shipping on orders over ¥{threshold}",
+    "remaining_for_free": "Only ¥{amount} more for free nationwide shipping",
+    "satisfied_free": "Free shipping conditions met",
+    "empty": "Your cart is empty",
+    "go_shopping": "Go shopping",
+    "subscription": "Subscription ({frequency})",
+    "monthly": "Monthly",
+    "biweekly": "Every 2 weeks",
+    "once": "Once",
+    "address_parsing": "Smart Address Parsing",
+    "address_placeholder": "Paste full shipping info: e.g.: John Doe, 13800138000, Beijing...",
+    "parse_btn": "One-click Parse",
+    "recipient": "Recipient",
+    "phone": "Phone",
+    "address": "Address",
+    "order_tracking": "Recent Order Tracking",
+    "shipping": "Shipping",
+    "total_amount": "Total Amount",
+    "checkout": "Checkout"
+  },
+  "Product": {
+    "fetching": "Fetching coffee details...",
+    "not_found": "Product not found",
+    "detail_title": "Product Detail",
+    "roast_level": "Roast Level",
+    "process": "Process",
+    "flavor_profile": "Flavor Profile",
+    "grind_size_title": "Select Grind Size",
+    "grind_guide": "Grind Guide",
+    "start_subscription": "Start Subscription",
+    "delivery_frequency": "Delivery Frequency",
+    "grind_sizes": {
+      "whole": { "label": "Whole Bean", "desc": "No grind" },
+      "coarse": { "label": "French Press", "desc": "Coarse grind" },
+      "medium": { "label": "Pour-over/Drip", "desc": "Medium grind" },
+      "fine": { "label": "Espresso", "desc": "Extra fine grind" }
+    }
+  },
+  "Profile": {
+    "title": "My Profile",
+    "calendar": "Subscription Calendar",
+    "no_subscriptions": "No active subscriptions",
+    "next_shipment": "Next shipment: {date}",
+    "skip": "Skip",
+    "modify": "Modify",
+    "poster_title": "Exclusive Unboxing Poster",
+    "save_image": "Save Image",
+    "unboxing_moment": "UNBOXING MOMENT.",
+    "selected_bean": "Selected Bean",
+    "member": "Member",
+    "date": "Date",
+    "inspiration_title": "Record your brewing inspiration",
+    "inspiration_desc": "Use structured templates to share ratios and temperature parameters"
+  }
+}

@@ -7,8 +7,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../lib/store/useCartStore';
 import { useRouter } from 'next/navigation';
 import { supabase } from '../lib/supabase';
+import { useTranslations } from 'next-intl';
 
 export const CommunityFeed = () => {
+  const t = useTranslations('Community');
   const [posts, setPosts] = useState<Post[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -40,7 +42,7 @@ export const CommunityFeed = () => {
     fetchData();
   }, []);
 
-  if (loading) return <div className="py-20 text-center font-bold text-gray-300">Loading your feed...</div>;
+  if (loading) return <div className="py-20 text-center font-bold text-gray-300">{t('loading')}</div>;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -51,7 +53,8 @@ export const CommunityFeed = () => {
   );
 };
 
-const PostCard = ({ post, allProducts }: { post: any, allProducts: Product[] }) => {
+const PostCard = ({ post, allProducts }: { post: Post, allProducts: Product[] }) => {
+  const t = useTranslations('Community');
   const router = useRouter();
   const [showSKU, setShowSKU] = useState(false);
   const relatedProduct = allProducts.find(p => p.id === post.relatedProductId);
@@ -69,7 +72,7 @@ const PostCard = ({ post, allProducts }: { post: any, allProducts: Product[] }) 
                 className="w-full bg-white/90 backdrop-blur-md text-black py-3 rounded-2xl flex items-center justify-center gap-2 text-sm font-bold shadow-lg hover:bg-black hover:text-white transition-all"
               >
                 <ShoppingBag size={18} />
-                笔记同款：{relatedProduct.name}
+                {t('buy_now', { name: relatedProduct.name })}
               </button>
           </div>
         )}
@@ -107,6 +110,7 @@ const PostCard = ({ post, allProducts }: { post: any, allProducts: Product[] }) 
 };
 
 const SKUModal = ({ product, onClose }: { product: Product, onClose: () => void }) => {
+  const t = useTranslations('Community');
   const addItem = useCartStore(state => state.addItem);
   const [purchaseType, setPurchaseType] = useState<'once' | 'subscription'>('once');
 
@@ -153,13 +157,13 @@ const SKUModal = ({ product, onClose }: { product: Product, onClose: () => void 
               onClick={() => setPurchaseType('once')}
               className={`py-3 rounded-xl text-sm font-bold transition-all ${purchaseType === 'once' ? 'bg-white shadow-sm' : 'text-gray-500'}`}
             >
-              单次购买
+              {t('once')}
             </button>
             <button 
               onClick={() => setPurchaseType('subscription')}
               className={`py-3 rounded-xl text-sm font-bold transition-all ${purchaseType === 'subscription' ? 'bg-white shadow-sm' : 'text-gray-500'}`}
             >
-              周期订阅 (9折)
+              {t('subscription')}
             </button>
           </div>
 
@@ -168,7 +172,7 @@ const SKUModal = ({ product, onClose }: { product: Product, onClose: () => void 
             className="w-full bg-black text-white py-5 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-gray-800 transition-all shadow-xl active:scale-[0.98]"
           >
             <Plus size={20} />
-            加入购物车
+            {t('add_to_cart')}
           </button>
         </div>
       </motion.div>

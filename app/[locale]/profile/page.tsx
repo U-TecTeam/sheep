@@ -6,8 +6,10 @@ import { Calendar as CalendarIcon, Package, Share2, Plus, ArrowLeft, Camera, Set
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import html2canvas from 'html2canvas';
+import { useTranslations } from 'next-intl';
 
 export default function ProfilePage() {
+  const t = useTranslations('Profile');
   const { items } = useCartStore();
   const router = useRouter();
   const posterRef = useRef<HTMLDivElement>(null);
@@ -29,7 +31,7 @@ export default function ProfilePage() {
         <button onClick={() => router.push('/')} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
           <ArrowLeft size={20} />
         </button>
-        <h1 className="text-sm font-bold uppercase tracking-widest">My Profile</h1>
+        <h1 className="text-sm font-bold uppercase tracking-widest">{t('title')}</h1>
         <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
           <Settings size={20} />
         </button>
@@ -52,13 +54,13 @@ export default function ProfilePage() {
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-2">
               <CalendarIcon size={18} />
-              <h2 className="text-sm font-bold uppercase tracking-widest">订阅日历 (Next Shipments)</h2>
+              <h2 className="text-sm font-bold uppercase tracking-widest">{t('calendar')}</h2>
             </div>
           </div>
 
           {subscriptionItems.length === 0 ? (
             <div className="py-10 text-center border-2 border-dashed border-gray-100 rounded-2xl">
-              <p className="text-gray-300 font-bold">暂无生效中的周期订阅</p>
+              <p className="text-gray-300 font-bold">{t('no_subscriptions')}</p>
             </div>
           ) : (
             <div className="space-y-6">
@@ -84,13 +86,13 @@ export default function ProfilePage() {
                 <div className="flex items-center gap-3">
                   <Package size={20} className="text-gray-400" />
                   <div>
-                    <p className="text-xs font-bold">下一期发货：5月15日</p>
+                    <p className="text-xs font-bold">{t('next_shipment', { date: '5月15日' })}</p>
                     <p className="text-[10px] text-gray-400 font-medium">{subscriptionItems[0].product.name}</p>
                   </div>
                 </div>
                 <div className="flex gap-2">
-                  <button className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[10px] font-bold uppercase">跳过</button>
-                  <button className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[10px] font-bold uppercase">修改</button>
+                  <button className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[10px] font-bold uppercase">{t('skip')}</button>
+                  <button className="px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-[10px] font-bold uppercase">{t('modify')}</button>
                 </div>
               </div>
             </div>
@@ -102,9 +104,9 @@ export default function ProfilePage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Share2 size={18} />
-              <h2 className="text-sm font-bold uppercase tracking-widest">专属开箱海报</h2>
+              <h2 className="text-sm font-bold uppercase tracking-widest">{t('poster_title')}</h2>
             </div>
-            <button onClick={downloadPoster} className="text-xs font-bold underline underline-offset-4">保存图片</button>
+            <button onClick={downloadPoster} className="text-xs font-bold underline underline-offset-4">{t('save_image')}</button>
           </div>
 
           <div ref={posterRef} className="bg-white p-10 rounded-[2.5rem] shadow-2xl border border-gray-100 max-w-sm mx-auto text-black relative overflow-hidden">
@@ -112,8 +114,9 @@ export default function ProfilePage() {
             
             <div className="space-y-8 relative z-10">
               <div className="text-4xl font-black tracking-tighter leading-none">
-                UNBOXING <br />
-                MOMENT.
+                {t.rich('unboxing_moment', {
+                  br: () => <br />
+                })}
               </div>
               
               <div className="aspect-square rounded-2xl overflow-hidden grayscale">
@@ -126,7 +129,7 @@ export default function ProfilePage() {
                     <Coffee size={20} />
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-widest">Selected Bean</p>
+                    <p className="text-xs font-bold uppercase tracking-widest">{t('selected_bean')}</p>
                     <p className="text-lg font-black">{items[0]?.product.name || "Ethiopia Yirgacheffe"}</p>
                   </div>
                 </div>
@@ -140,11 +143,11 @@ export default function ProfilePage() {
 
               <div className="pt-8 border-t border-gray-100 flex items-center justify-between">
                 <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Member</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{t('member')}</p>
                   <p className="text-xs font-bold">BREWMASTER JACK</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Date</p>
+                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{t('date')}</p>
                   <p className="text-xs font-bold">2025.05.03</p>
                 </div>
               </div>
@@ -155,8 +158,8 @@ export default function ProfilePage() {
         {/* Brewing Note Editor Trigger */}
         <section className="bg-black text-white p-8 rounded-[2.5rem] flex items-center justify-between shadow-xl">
           <div className="space-y-2">
-            <h2 className="text-xl font-bold">记录你的冲煮灵感</h2>
-            <p className="text-xs text-gray-400 font-medium">使用结构化模板，分享粉水比与水温参数</p>
+            <h2 className="text-xl font-bold">{t('inspiration_title')}</h2>
+            <p className="text-xs text-gray-400 font-medium">{t('inspiration_desc')}</p>
           </div>
           <button className="w-14 h-14 bg-white text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform">
             <Plus size={24} />

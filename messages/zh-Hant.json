@@ -1,0 +1,131 @@
+{
+  "Navigation": {
+    "discovery": "探索",
+    "market": "市場",
+    "subscription": "訂閱",
+    "online": "在線",
+    "shopping_cart": "購物車",
+    "close": "關閉"
+  },
+  "Home": {
+    "personalized": "為您量身定制",
+    "hero_title": "探索您的下一個 <spanTag>最愛</spanTag> 沖煮。",
+    "tags": {
+      "all": "全部",
+      "recipes": "配方",
+      "reviews": "評價",
+      "unboxing": "開箱",
+      "tutorials": "教程"
+    }
+  },
+  "Auth": {
+    "welcome_back": "歡迎回來",
+    "create_account": "創建賬戶",
+    "login_desc": "登錄以管理您的訂閱和沖煮筆記",
+    "signup_desc": "加入全球咖啡愛好者社區",
+    "email": "電子郵件地址",
+    "password": "密碼",
+    "login_btn": "登錄",
+    "signup_btn": "註冊",
+    "or_continue": "或繼續使用",
+    "no_account": "還沒有賬件？",
+    "has_account": "已經有賬件了？",
+    "register_now": "立即註冊",
+    "return_login": "返回登錄",
+    "verify_email": "請前往郵件驗證您的賬件！"
+  },
+  "TasteTest": {
+    "test": "口味測試",
+    "step": "第 {current} 步，共 {total} 步",
+    "complete_title": "測試完成！",
+    "complete_desc": "已為您生成專屬咖啡風味畫像，快去發現頁看看吧。",
+    "questions": {
+      "fruit": {
+        "title": "您喜歡哪種水果的甜感？",
+        "options": {
+          "citrus": "柑橘/檸檬 (偏酸)",
+          "berry": "漿果/草莓 (均衡)",
+          "grape": "葡萄/巧克力 (偏甜)"
+        }
+      },
+      "body": {
+        "title": "您更傾向於什麼樣的口感？",
+        "options": {
+          "tea": "像茶一樣清爽",
+          "smooth": "絲滑順口",
+          "heavy": "像紅酒或熱可可一樣厚重"
+        }
+      },
+      "roast": {
+        "title": "您平時的烘焙偏好是？",
+        "options": {
+          "light": "淺烘 (保留原產地花果香)",
+          "medium": "中烘 (均衡的堅果巧克力感)",
+          "dark": "深烘 (醇厚微苦，無酸)"
+        }
+      }
+    }
+  },
+  "Community": {
+    "loading": "正在加載您的動態...",
+    "buy_now": "筆記同款：{name}",
+    "once": "單次購買",
+    "subscription": "週期訂閱 (9折)",
+    "add_to_cart": "加入購物車"
+  },
+  "Cart": {
+    "free_shipping_threshold": "全場滿 ¥{threshold} 包郵",
+    "remaining_for_free": "還差 ¥{amount} 即可享受全國免郵",
+    "satisfied_free": "已滿足包郵條件",
+    "empty": "購物車空空如也",
+    "go_shopping": "去逛逛",
+    "subscription": "週期訂閱 ({frequency})",
+    "monthly": "每月",
+    "biweekly": "每2周",
+    "once": "單次購買",
+    "address_parsing": "智能地址解析",
+    "address_placeholder": "粘貼完整收件信息：例如：張三，13800138000，北京市...",
+    "parse_btn": "一鍵解析",
+    "recipient": "收件人",
+    "phone": "電話",
+    "address": "詳細地址",
+    "order_tracking": "最近訂單軌跡",
+    "shipping": "運送中",
+    "total_amount": "總計金額",
+    "checkout": "結算訂單"
+  },
+  "Product": {
+    "fetching": "正在獲取咖啡詳情...",
+    "not_found": "未找到產品",
+    "detail_title": "產品詳情",
+    "roast_level": "烘焙程度",
+    "process": "處理方式",
+    "flavor_profile": "風味畫像",
+    "grind_size_title": "選擇研磨度",
+    "grind_guide": "研磨指南",
+    "start_subscription": "開啟訂閱",
+    "delivery_frequency": "配送頻率",
+    "grind_sizes": {
+      "whole": { "label": "咖啡原豆", "desc": "不研磨" },
+      "coarse": { "label": "法壓壺", "desc": "粗研磨" },
+      "medium": { "label": "手沖/滴濾", "desc": "中度研磨" },
+      "fine": { "label": "意式濃縮", "desc": "極細研磨" }
+    }
+  },
+  "Profile": {
+    "title": "我的資料",
+    "calendar": "訂閱日曆",
+    "no_subscriptions": "暫無生效中的週期訂閱",
+    "next_shipment": "下一期發貨：{date}",
+    "skip": "跳過",
+    "modify": "修改",
+    "poster_title": "專屬開箱海報",
+    "save_image": "保存圖片",
+    "unboxing_moment": "UNBOXING MOMENT.",
+    "selected_bean": "精選豆款",
+    "member": "會員",
+    "date": "日期",
+    "inspiration_title": "記錄你的沖煮靈感",
+    "inspiration_desc": "使用結構化模板，分享粉水比與水溫參數"
+  }
+}
