@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
 import { supabase } from '@/lib/supabase';
+import Image from 'next/image';
 
 interface ParsedAddress {
   name: string;

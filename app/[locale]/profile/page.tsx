@@ -8,6 +8,8 @@ import { motion } from 'framer-motion';
 import html2canvas from 'html2canvas';
 import { useTranslations } from 'next-intl';
 import { supabase } from '@/lib/supabase';
+import { Order, OrderItem } from '@/lib/mockData';
+import Image from 'next/image';
 
 export default function ProfilePage() {
   const t = useTranslations('Profile');
@@ -16,7 +18,7 @@ export default function ProfilePage() {
   const posterRef = useRef<HTMLDivElement>(null);
   const subscriptionItems = items.filter(i => i.purchaseType === 'subscription');
 
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export default function ProfilePage() {
       const { data: { user } } = await supabase.auth.getUser();
       if (user) {
         const { data } = await supabase.from('orders').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
-        if (data) setOrders(data);
+        if (data) setOrders(data as Order[]);
       }
       setLoading(false);
     }
@@ -261,16 +263,6 @@ export default function ProfilePage() {
             <Plus size={24} />
           </button>
         </section>
-      </main>
-    </div>
-  );
-}
-    </section>
-      </main>
-    </div>
-  );
-}
-   </section>
       </main>
     </div>
   );

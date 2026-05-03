@@ -16,13 +16,14 @@ import {
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
-import { Product } from '@/lib/mockData';
+import { Product, Order } from '@/lib/mockData';
+import Image from 'next/image';
 
 export default function AdminDashboard() {
   const t = useTranslations('Admin');
   const [products, setProducts] = useState<Product[]>([]);
-  const [orders, setOrders] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'orders'>('overview');
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [activeTab, setActiveTab] = useState<'overview' | 'products' | 'orders' | 'posts'>('overview');
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,7 +32,23 @@ export default function AdminDashboard() {
       const { data: orderData } = await supabase.from('orders').select('*').order('created_at', { ascending: false });
       
       if (prodData) {
-        setProducts(prodData.map(p => ({
+        setProducts(prodData.map((p: {
+          id: string;
+          name: string;
+          image_url: string;
+          flavor_profile: {
+            acid: number;
+            body: number;
+            sweet: number;
+            bitter: number;
+            aroma: number;
+          };
+          roast_level: 'light' | 'medium' | 'dark';
+          price: number;
+          tags: string[];
+          description: string;
+          process: 'washed' | 'natural' | 'honey';
+        }) => ({
           ...p,
           image: p.image_url,
           flavorProfile: p.flavor_profile,
@@ -74,7 +91,7 @@ export default function AdminDashboard() {
           ].map((item) => (
           <button 
             key={item.id}
-            onClick={() => setActiveTab(item.id as any)}
+            onClick={() => setActiveTab(item.id as 'overview' | 'products' | 'orders' | 'posts')}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${activeTab === item.id ? 'bg-black text-white shadow-lg' : 'text-gray-400 hover:bg-gray-50 hover:text-black'}`}
           >              <item.icon size={18} />
               {item.name}
@@ -242,12 +259,6 @@ export default function AdminDashboard() {
               </table>
             </div>
           </section>
-        )}
-      </main>
-    </div>
-  );
-}
-/section>
         )}
       </main>
     </div>

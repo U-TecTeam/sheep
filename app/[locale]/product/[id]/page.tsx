@@ -9,6 +9,7 @@ import { useCartStore } from '@/lib/store/useCartStore';
 import { motion } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
 
 export default function ProductDetails() {
   const t = useTranslations('Product');
@@ -212,8 +213,5 @@ function PlusIcon() {
     <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center text-black">
       <Plus size={16} />
     </div>
-  );
-}
-iv>
   );
 }

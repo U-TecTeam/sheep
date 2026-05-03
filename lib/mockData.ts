@@ -35,13 +35,23 @@ export interface OrderItem {
   purchaseType: string;
 }
 
+export interface ShippingAddress {
+  name: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+}
+
 export interface Order {
   id: string;
   user_id: string;
   items: OrderItem[];
   total_amount: number;
   status: string;
-  shipping_address: any;
+  shipping_address: ShippingAddress;
   created_at: string;
   updated_at: string;
 }
