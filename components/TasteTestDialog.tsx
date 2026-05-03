@@ -2,44 +2,46 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useUserStore, TasteProfile } from '../lib/store/useUserStore';
+import { useUserStore, TasteProfile } from '@/lib/store/useUserStore';
 import { Coffee, CheckCircle2, X } from 'lucide-react';
-
-const questions = [
-  {
-    id: 'fruit',
-    title: '您喜欢哪种水果的甜感？',
-    options: [
-      { label: '柑橘/柠檬 (偏酸)', value: 8, key: 'acid' },
-      { label: '浆果/草莓 (均衡)', value: 5, key: 'acid' },
-      { label: '葡萄/巧克力 (偏甜)', value: 2, key: 'acid' },
-    ],
-  },
-  {
-    id: 'body',
-    title: '您更倾向于什么样的口感？',
-    options: [
-      { label: '像茶一样清爽', value: 3, key: 'body' },
-      { label: '丝滑顺口', value: 5, key: 'body' },
-      { label: '像红酒或热可可一样厚重', value: 8, key: 'body' },
-    ],
-  },
-  {
-    id: 'roast',
-    title: '您平时的烘焙偏好是？',
-    options: [
-      { label: '浅烘 (保留原产地花果香)', value: 'light', key: 'roast' },
-      { label: '中烘 (均衡的坚果巧克力感)', value: 'medium', key: 'roast' },
-      { label: '深烘 (醇厚微苦，无酸)', value: 'dark', key: 'roast' },
-    ],
-  },
-];
+import { useTranslations } from 'next-intl';
 
 export const TasteTestDialog = () => {
+  const t = useTranslations('TasteTest');
   const { hasCompletedOnboarding, completeOnboarding } = useUserStore();
   const [isOpen, setIsOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Partial<TasteProfile>>({});
+
+  const questions = [
+    {
+      id: 'fruit',
+      title: t('questions.fruit.title'),
+      options: [
+        { label: t('questions.fruit.options.citrus'), value: 8, key: 'acid' },
+        { label: t('questions.fruit.options.berry'), value: 5, key: 'acid' },
+        { label: t('questions.fruit.options.grape'), value: 2, key: 'acid' },
+      ],
+    },
+    {
+      id: 'body',
+      title: t('questions.body.title'),
+      options: [
+        { label: t('questions.body.options.tea'), value: 3, key: 'body' },
+        { label: t('questions.body.options.smooth'), value: 5, key: 'body' },
+        { label: t('questions.body.options.heavy'), value: 8, key: 'body' },
+      ],
+    },
+    {
+      id: 'roast',
+      title: t('questions.roast.title'),
+      options: [
+        { label: t('questions.roast.options.light'), value: 'light', key: 'roast' },
+        { label: t('questions.roast.options.medium'), value: 'medium', key: 'roast' },
+        { label: t('questions.roast.options.dark'), value: 'dark', key: 'roast' },
+      ],
+    },
+  ];
 
   useEffect(() => {
     if (!hasCompletedOnboarding) {
@@ -48,7 +50,7 @@ export const TasteTestDialog = () => {
     }
   }, [hasCompletedOnboarding]);
 
-  const handleOptionSelect = (key: string, value: any) => {
+  const handleOptionSelect = (key: string, value: string | number) => {
     const newAnswers = { ...answers, [key]: value };
     setAnswers(newAnswers);
     
@@ -57,10 +59,10 @@ export const TasteTestDialog = () => {
     } else {
       // Final step
       const finalProfile: TasteProfile = {
-        acid: newAnswers.acid || 5,
+        acid: (newAnswers.acid as number) || 5,
         sweet: 7,
-        body: newAnswers.body || 5,
-        roast: (newAnswers.roast as any) || 'medium',
+        body: (newAnswers.body as number) || 5,
+        roast: (newAnswers.roast as TasteProfile['roast']) || 'medium',
       };
       completeOnboarding(finalProfile);
       setTimeout(() => setIsOpen(false), 1000);
@@ -94,8 +96,8 @@ export const TasteTestDialog = () => {
               >
                 <CheckCircle2 size={40} />
               </motion.div>
-              <h2 className="text-2xl font-bold">测试完成！</h2>
-              <p className="text-gray-500">已为您生成专属咖啡风味画像，快去发现页看看吧。</p>
+              <h2 className="text-2xl font-bold">{t('complete_title')}</h2>
+              <p className="text-gray-500">{t('complete_desc')}</p>
             </div>
           ) : (
             <>
@@ -103,8 +105,10 @@ export const TasteTestDialog = () => {
                 <div className="bg-black text-white p-2 rounded-lg">
                   <Coffee size={20} />
                 </div>
-                <span className="text-sm font-bold tracking-widest uppercase">Taste Test</span>
-                <span className="ml-auto text-xs text-gray-400 font-medium">Step {currentStep + 1} of {questions.length}</span>
+                <span className="text-sm font-bold tracking-widest uppercase">{t('test')}</span>
+                <span className="ml-auto text-xs text-gray-400 font-medium">
+                  {t('step', { current: currentStep + 1, total: questions.length })}
+                </span>
               </div>
 
               <AnimatePresence mode="wait">

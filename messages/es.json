@@ -1,0 +1,97 @@
+{
+  "Navigation": {
+    "discovery": "Descubrimiento",
+    "market": "Mercado",
+    "subscription": "Suscripción",
+    "online": "En línea",
+    "shopping_cart": "Carrito de compras",
+    "close": "Cerrar"
+  },
+  "Home": {
+    "personalized": "Personalizado para ti",
+    "hero_title": "DESCUBRE TU PRÓXIMA BEBIDA FAVORITA.",
+    "tags": {
+      "all": "Todo",
+      "recipes": "Recetas",
+      "reviews": "Reseñas",
+      "unboxing": "Unboxing",
+      "tutorials": "Tutoriales"
+    }
+  },
+  "Auth": {
+    "welcome_back": "Bienvenido de nuevo",
+    "create_account": "Crear cuenta",
+    "login_desc": "Inicia sesión para gestionar tus suscripciones y notas de preparación",
+    "signup_desc": "Únete a la comunidad global de amantes del café",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "login_btn": "INICIAR SESIÓN",
+    "signup_btn": "REGISTRARSE",
+    "or_continue": "O continuar con",
+    "no_account": "¿No tienes cuenta?",
+    "has_account": "¿Ya tienes una cuenta?",
+    "register_now": "Regístrate ahora",
+    "return_login": "Volver al inicio de sesión",
+    "verify_email": "¡Por favor, ve a tu correo para verificar tu cuenta!"
+  },
+  "TasteTest": {
+    "test": "Prueba de sabor",
+    "step": "Paso {current} de {total}",
+    "complete_title": "¡Prueba completada!",
+    "complete_desc": "Tu perfil de sabor de café exclusivo ha sido generado. Ve a la página de descubrimiento para verlo.",
+    "questions": {
+      "fruit": {
+        "title": "¿Qué tipo de dulzor de fruta te gusta?",
+        "options": {
+          "citrus": "Cítricos/Limón (Ácido)",
+          "berry": "Bayas/Fresa (Equilibrado)",
+          "grape": "Uva/Chocolate (Dulce)"
+        }
+      },
+      "body": {
+        "title": "¿Qué tipo de sensación en boca prefieres?",
+        "options": {
+          "tea": "Refrescante como el té",
+          "smooth": "Suave y sedoso",
+          "heavy": "Pesado como el vino o el chocolate caliente"
+        }
+      },
+      "roast": {
+        "title": "¿Cuál es tu preferencia de tueste habitual?",
+        "options": {
+          "light": "Ligero (Conserva aromas florales y frutales)",
+          "medium": "Medio (Equilibrado con notas de frutos secos y chocolate)",
+          "dark": "Oscuro (Rico y ligeramente amargo, sin acidez)"
+        }
+      }
+    }
+  },
+  "Community": {
+    "loading": "Cargando tu feed...",
+    "buy_now": "Comprar mismo estilo: {name}",
+    "once": "Una vez",
+    "subscription": "Suscripción (10% de descuento)",
+    "add_to_cart": "Añadir al carrito"
+  },
+  "Cart": {
+    "free_shipping_threshold": "Envío gratis en pedidos superiores a ¥{threshold}",
+    "remaining_for_free": "Solo ¥{amount} más para envío gratuito a todo el país",
+    "satisfied_free": "Condiciones de envío gratuito cumplidas",
+    "empty": "Tu carrito está vacío",
+    "go_shopping": "Ir de compras",
+    "subscription": "Suscripción ({frequency})",
+    "monthly": "Mensual",
+    "biweekly": "Cada 2 semanas",
+    "once": "Compra única",
+    "address_parsing": "Análisis inteligente de dirección",
+    "address_placeholder": "Pega la información de envío completa: ej.: Juan Pérez, 13800138000, Madrid...",
+    "parse_btn": "Analizar en un clic",
+    "recipient": "Destinatario",
+    "phone": "Teléfono",
+    "address": "Dirección",
+    "order_tracking": "Seguimiento de pedidos recientes",
+    "shipping": "Enviando",
+    "total_amount": "Monto total",
+    "checkout": "Pagar"
+  }
+}

@@ -1,31 +1,55 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { mockProducts } from '@/lib/mockData';
+import { Product } from '@/lib/mockData';
 import { FlavorRadar } from '@/components/FlavorRadar';
-import { ChevronLeft, Info, Calendar, ShoppingBag, Check } from 'lucide-react';
+import { ChevronLeft, Info, Calendar, ShoppingBag, Check, Plus } from 'lucide-react';
 import { useCartStore } from '@/lib/store/useCartStore';
 import { motion } from 'framer-motion';
-
-const grindSizes = [
-  { id: 'whole', label: '咖啡原豆', desc: '不研磨', img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=100' },
-  { id: 'coarse', label: '法压壶', desc: '粗研磨', img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=101' },
-  { id: 'medium', label: '手冲/滴滤', desc: '中度研磨', img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=102' },
-  { id: 'fine', label: '意式浓缩', desc: '极细研磨', img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=103' },
-];
+import { supabase } from '@/lib/supabase';
+import { useTranslations } from 'next-intl';
 
 export default function ProductDetails() {
-  const { id } = useParams();
+  const t = useTranslations('Product');
+  const tCommunity = useTranslations('Community');
+  const tCart = useTranslations('Cart');
+  const params = useParams();
+  const id = params.id as string;
   const router = useRouter();
-  const product = mockProducts.find(p => p.id === id);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
   const addItem = useCartStore(state => state.addItem);
+
+  const grindSizes = [
+    { id: 'whole', label: t('grind_sizes.whole.label'), desc: t('grind_sizes.whole.desc'), img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=100' },
+    { id: 'coarse', label: t('grind_sizes.coarse.label'), desc: t('grind_sizes.coarse.desc'), img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=101' },
+    { id: 'medium', label: t('grind_sizes.medium.label'), desc: t('grind_sizes.medium.desc'), img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=102' },
+    { id: 'fine', label: t('grind_sizes.fine.label'), desc: t('grind_sizes.fine.desc'), img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=103' },
+  ];
+
+  useEffect(() => {
+    async function fetchProduct() {
+      const { data } = await supabase.from('products').select('*').eq('id', id).single();
+      if (data) {
+        setProduct({
+          ...data,
+          image: data.image_url,
+          flavorProfile: data.flavor_profile,
+          roastLevel: data.roast_level
+        });
+      }
+      setLoading(false);
+    }
+    fetchProduct();
+  }, [id]);
 
   const [purchaseType, setPurchaseType] = useState<'once' | 'subscription'>('once');
   const [selectedGrind, setSelectedGrind] = useState('whole');
   const [frequency, setFrequency] = useState<'2weeks' | '1month'>('1month');
 
-  if (!product) return <div>Product not found</div>;
+  if (loading) return <div className="min-h-screen bg-white flex items-center justify-center font-bold text-gray-300">{t('fetching')}</div>;
+  if (!product) return <div className="min-h-screen bg-white flex items-center justify-center">{t('not_found')}</div>;
 
   const handleAddToCart = () => {
     addItem({
@@ -44,7 +68,7 @@ export default function ProductDetails() {
         <button onClick={() => router.back()} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
           <ChevronLeft size={24} />
         </button>
-        <span className="font-bold uppercase tracking-widest text-sm">Product Detail</span>
+        <span className="font-bold uppercase tracking-widest text-sm">{t('detail_title')}</span>
         <div className="w-10" />
       </div>
 
@@ -73,11 +97,11 @@ export default function ProductDetails() {
 
           <div className="grid grid-cols-2 gap-6">
             <div className="p-6 bg-gray-50 rounded-[2rem] space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Roast Level</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t('roast_level')}</span>
               <p className="font-bold text-lg capitalize">{product.roastLevel}</p>
             </div>
             <div className="p-6 bg-gray-50 rounded-[2rem] space-y-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Process</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{t('process')}</span>
               <p className="font-bold text-lg capitalize">{product.process}</p>
             </div>
           </div>
@@ -85,7 +109,7 @@ export default function ProductDetails() {
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Info size={16} />
-              <h2 className="text-sm font-bold uppercase tracking-widest">Flavor Profile</h2>
+              <h2 className="text-sm font-bold uppercase tracking-widest">{t('flavor_profile')}</h2>
             </div>
             <FlavorRadar data={product.flavorProfile} />
           </div>
@@ -101,7 +125,7 @@ export default function ProductDetails() {
                 className={`py-6 rounded-[1.5rem] text-sm font-bold transition-all flex flex-col items-center gap-1 ${purchaseType === 'once' ? 'bg-white shadow-xl text-black' : 'text-gray-400'}`}
               >
                 <ShoppingBag size={20} />
-                单次购买
+                {tCommunity('once')}
                 <span className="text-[10px] opacity-60">¥{product.price}</span>
               </button>
               <button 
@@ -109,7 +133,7 @@ export default function ProductDetails() {
                 className={`py-6 rounded-[1.5rem] text-sm font-bold transition-all flex flex-col items-center gap-1 ${purchaseType === 'subscription' ? 'bg-white shadow-xl text-black' : 'text-gray-400'}`}
               >
                 <Calendar size={20} />
-                周期订阅
+                {tCommunity('subscription')}
                 <span className="text-[10px] text-green-600">¥{Math.round(product.price * 0.9)} (-10%)</span>
               </button>
             </div>
@@ -123,16 +147,16 @@ export default function ProductDetails() {
             >
               <div className="flex items-center gap-2">
                 <Calendar size={18} className="text-gray-400" />
-                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400">Delivery Frequency</h3>
+                <h3 className="text-xs font-bold uppercase tracking-widest text-gray-400">{t('delivery_frequency')}</h3>
               </div>
               <div className="flex gap-4">
                 {[
-                  { id: '2weeks', label: '每 2 周' },
-                  { id: '1month', label: '每 1 个月' }
+                  { id: '2weeks', label: tCart('biweekly') },
+                  { id: '1month', label: tCart('monthly') }
                 ].map(freq => (
                   <button 
                     key={freq.id}
-                    onClick={() => setFrequency(freq.id as any)}
+                    onClick={() => setFrequency(freq.id as '2weeks' | '1month')}
                     className={`flex-1 py-4 rounded-2xl border-2 transition-all font-bold text-sm ${frequency === freq.id ? 'bg-white text-black border-white' : 'border-gray-800 text-gray-400 hover:border-gray-600'}`}
                   >
                     {freq.label}
@@ -145,9 +169,9 @@ export default function ProductDetails() {
           {/* Grind Size Selector */}
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold uppercase tracking-widest">Select Grind Size</h3>
+              <h3 className="text-sm font-bold uppercase tracking-widest">{t('grind_size_title')}</h3>
               <button className="text-xs font-bold text-gray-400 hover:text-black flex items-center gap-1 underline underline-offset-4">
-                研磨指南
+                {t('grind_guide')}
               </button>
             </div>
             <div className="grid grid-cols-2 gap-4">
@@ -175,7 +199,7 @@ export default function ProductDetails() {
             className="w-full py-6 bg-black text-white rounded-full font-bold text-lg shadow-[0_20px_40px_-10px_rgba(0,0,0,0.3)] hover:bg-gray-800 transition-all active:scale-[0.98] flex items-center justify-center gap-3"
           >
             <PlusIcon />
-            {purchaseType === 'subscription' ? '开启订阅' : '加入购物车'}
+            {purchaseType === 'subscription' ? t('start_subscription') : tCommunity('add_to_cart')}
           </button>
         </div>
       </main>
@@ -188,13 +212,5 @@ function PlusIcon() {
     <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center text-black">
       <Plus size={16} />
     </div>
-  );
-}
-
-function Plus({ size }: { size: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
   );
 }

@@ -1,41 +1,78 @@
 'use client';
 
-import React, { useState } from 'react';
-import { mockPosts, mockProducts, Product } from '../lib/mockData';
+import React, { useState, useEffect } from 'react';
+import { Product, Post } from '../lib/mockData';
 import { Heart, MessageCircle, ShoppingBag, Plus, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../lib/store/useCartStore';
 import { useRouter } from 'next/navigation';
+import { supabase } from '../lib/supabase';
+import { useTranslations } from 'next-intl';
 
 export const CommunityFeed = () => {
+  const t = useTranslations('Community');
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      const { data: postsData } = await supabase.from('posts').select('*');
+      const { data: productsData } = await supabase.from('products').select('*');
+      
+      // Transform Supabase data to match our UI interfaces
+      if (productsData) {
+        setProducts(productsData.map(p => ({
+          ...p,
+          image: p.image_url,
+          flavorProfile: p.flavor_profile,
+          roastLevel: p.roast_level
+        })));
+      }
+
+      if (postsData) {
+        setPosts(postsData.map(p => ({
+          ...p,
+          author: { name: p.author_name, avatar: p.author_avatar },
+          relatedProductId: p.related_product_id
+        })));
+      }
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
+
+  if (loading) return <div className="py-20 text-center font-bold text-gray-300">{t('loading')}</div>;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {mockPosts.map((post) => (
-        <PostCard key={post.id} post={post} />
+      {posts.map((post) => (
+        <PostCard key={post.id} post={post} allProducts={products} />
       ))}
     </div>
   );
 };
 
-const PostCard = ({ post }: { post: any }) => {
+const PostCard = ({ post, allProducts }: { post: Post, allProducts: Product[] }) => {
+  const t = useTranslations('Community');
   const router = useRouter();
   const [showSKU, setShowSKU] = useState(false);
-  const relatedProduct = mockProducts.find(p => p.id === post.relatedProductId);
+  const relatedProduct = allProducts.find(p => p.id === post.relatedProductId);
 
   return (
-    <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow group">
+    <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow group cursor-pointer" onClick={() => router.push(`/post/${post.id}`)}>
       <div className="relative aspect-[4/5] overflow-hidden">
         <img src={post.images[0]} alt="Post" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         
         {/* Quick Buy Overlay */}
         {relatedProduct && (
-          <div className="absolute bottom-4 left-4 right-4">
+          <div className="absolute bottom-4 left-4 right-4" onClick={(e) => e.stopPropagation()}>
               <button 
-                onClick={() => router.push(`/product/${relatedProduct.id}`)}
+                onClick={() => setShowSKU(true)}
                 className="w-full bg-white/90 backdrop-blur-md text-black py-3 rounded-2xl flex items-center justify-center gap-2 text-sm font-bold shadow-lg hover:bg-black hover:text-white transition-all"
               >
                 <ShoppingBag size={18} />
-                笔记同款：{relatedProduct.name}
+                {t('buy_now', { name: relatedProduct.name })}
               </button>
           </div>
         )}
@@ -73,6 +110,7 @@ const PostCard = ({ post }: { post: any }) => {
 };
 
 const SKUModal = ({ product, onClose }: { product: Product, onClose: () => void }) => {
+  const t = useTranslations('Community');
   const addItem = useCartStore(state => state.addItem);
   const [purchaseType, setPurchaseType] = useState<'once' | 'subscription'>('once');
 
@@ -119,13 +157,13 @@ const SKUModal = ({ product, onClose }: { product: Product, onClose: () => void 
               onClick={() => setPurchaseType('once')}
               className={`py-3 rounded-xl text-sm font-bold transition-all ${purchaseType === 'once' ? 'bg-white shadow-sm' : 'text-gray-500'}`}
             >
-              单次购买
+              {t('once')}
             </button>
             <button 
               onClick={() => setPurchaseType('subscription')}
               className={`py-3 rounded-xl text-sm font-bold transition-all ${purchaseType === 'subscription' ? 'bg-white shadow-sm' : 'text-gray-500'}`}
             >
-              周期订阅 (9折)
+              {t('subscription')}
             </button>
           </div>
 
@@ -134,7 +172,7 @@ const SKUModal = ({ product, onClose }: { product: Product, onClose: () => void 
             className="w-full bg-black text-white py-5 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-gray-800 transition-all shadow-xl active:scale-[0.98]"
           >
             <Plus size={20} />
-            加入购物车
+            {t('add_to_cart')}
           </button>
         </div>
       </motion.div>

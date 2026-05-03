@@ -3,7 +3,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
-import { X, Mail, Lock, User, Github, Coffee, ArrowRight, Loader2 } from 'lucide-react';
+import { X, Mail, Lock, User, Coffee, ArrowRight, Loader2 } from 'lucide-react';
+import { SiGithub } from 'react-icons/si';
+import { useTranslations } from 'next-intl';
 
 interface Props {
   isOpen: boolean;
@@ -11,6 +13,7 @@ interface Props {
 }
 
 export const AuthDialog = ({ isOpen, onClose }: Props) => {
+  const t = useTranslations('Auth');
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -29,18 +32,27 @@ export const AuthDialog = ({ isOpen, onClose }: Props) => {
       } else {
         const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
-        alert('请前往邮箱验证您的账号！');
+        alert(t('verify_email'));
       }
       onClose();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(String(err));
+      }
     } finally {
       setLoading(false);
     }
   };
 
   const handleGithubLogin = async () => {
-    await supabase.auth.signInWithOAuth({ provider: 'github' });
+    await supabase.auth.signInWithOAuth({ 
+      provider: 'github',
+      options: {
+        redirectTo: `${window.location.origin}/oauth/consent`
+      }
+    });
   };
 
   if (!isOpen) return null;
@@ -63,10 +75,10 @@ export const AuthDialog = ({ isOpen, onClose }: Props) => {
               <Coffee size={32} />
             </div>
             <h2 className="text-3xl font-black tracking-tighter uppercase">
-              {isLogin ? 'Welcome Back' : 'Create Account'}
+              {isLogin ? t('welcome_back') : t('create_account')}
             </h2>
             <p className="text-sm text-gray-500 font-medium leading-relaxed">
-              {isLogin ? '登录以管理您的订阅和冲煮笔记' : '加入全球咖啡爱好者社区'}
+              {isLogin ? t('login_desc') : t('signup_desc')}
             </p>
           </div>
 
@@ -75,7 +87,7 @@ export const AuthDialog = ({ isOpen, onClose }: Props) => {
               <Mail className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
               <input 
                 type="email" 
-                placeholder="Email Address" 
+                placeholder={t('email')} 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -86,7 +98,7 @@ export const AuthDialog = ({ isOpen, onClose }: Props) => {
               <Lock className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300" size={18} />
               <input 
                 type="password" 
-                placeholder="Password" 
+                placeholder={t('password')} 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -102,7 +114,7 @@ export const AuthDialog = ({ isOpen, onClose }: Props) => {
             >
               {loading ? <Loader2 className="animate-spin" size={20} /> : (
                 <>
-                  {isLogin ? 'LOGIN' : 'SIGN UP'}
+                  {isLogin ? t('login_btn') : t('signup_btn')}
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </>
               )}
@@ -111,21 +123,21 @@ export const AuthDialog = ({ isOpen, onClose }: Props) => {
 
           <div className="mt-8 relative">
             <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-gray-100"></div></div>
-            <div className="relative flex justify-center text-[10px] uppercase font-black tracking-widest text-gray-300 bg-white px-4">Or continue with</div>
+            <div className="relative flex justify-center text-[10px] uppercase font-black tracking-widest text-gray-300 bg-white px-4">{t('or_continue')}</div>
           </div>
 
           <button 
             onClick={handleGithubLogin}
             className="w-full mt-8 py-4 border-2 border-gray-100 rounded-full flex items-center justify-center gap-3 text-sm font-bold hover:bg-gray-50 transition-all"
           >
-            <Github size={20} />
+            <SiGithub size={20} />
             GITHUB
           </button>
 
           <p className="text-center mt-10 text-xs font-bold text-gray-400">
-            {isLogin ? '还没有账号？' : '已经有账号了？'}
+            {isLogin ? t('no_account') : t('has_account')}
             <button onClick={() => setIsLogin(!isLogin)} className="text-black underline underline-offset-4 ml-1">
-              {isLogin ? '立即注册' : '返回登录'}
+              {isLogin ? t('register_now') : t('return_login')}
             </button>
           </p>
         </div>
