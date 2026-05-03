@@ -1,0 +1,143 @@
+'use client';
+
+import React, { useState } from 'react';
+import { mockPosts, mockProducts, Product } from '../lib/mockData';
+import { Heart, MessageCircle, ShoppingBag, Plus, X } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useCartStore } from '../lib/store/useCartStore';
+import { useRouter } from 'next/navigation';
+
+export const CommunityFeed = () => {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {mockPosts.map((post) => (
+        <PostCard key={post.id} post={post} />
+      ))}
+    </div>
+  );
+};
+
+const PostCard = ({ post }: { post: any }) => {
+  const router = useRouter();
+  const [showSKU, setShowSKU] = useState(false);
+  const relatedProduct = mockProducts.find(p => p.id === post.relatedProductId);
+
+  return (
+    <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow group">
+      <div className="relative aspect-[4/5] overflow-hidden">
+        <img src={post.images[0]} alt="Post" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
+        
+        {/* Quick Buy Overlay */}
+        {relatedProduct && (
+          <div className="absolute bottom-4 left-4 right-4">
+              <button 
+                onClick={() => router.push(`/product/${relatedProduct.id}`)}
+                className="w-full bg-white/90 backdrop-blur-md text-black py-3 rounded-2xl flex items-center justify-center gap-2 text-sm font-bold shadow-lg hover:bg-black hover:text-white transition-all"
+              >
+                <ShoppingBag size={18} />
+                笔记同款：{relatedProduct.name}
+              </button>
+          </div>
+        )}
+      </div>
+      
+      <div className="p-5 space-y-4">
+        <p className="text-sm text-gray-700 line-clamp-2 leading-relaxed font-medium">
+          {post.content}
+        </p>
+        
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <img src={post.author.avatar} alt={post.author.name} className="w-6 h-6 rounded-full" />
+            <span className="text-xs font-bold text-gray-900">{post.author.name}</span>
+          </div>
+          <div className="flex items-center gap-4 text-gray-400">
+            <button className="flex items-center gap-1 hover:text-red-500 transition-colors">
+              <Heart size={16} />
+              <span className="text-xs font-medium">{post.likes}</span>
+            </button>
+            <button className="hover:text-black transition-colors">
+              <MessageCircle size={16} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {showSKU && relatedProduct && (
+          <SKUModal product={relatedProduct} onClose={() => setShowSKU(false)} />
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const SKUModal = ({ product, onClose }: { product: Product, onClose: () => void }) => {
+  const addItem = useCartStore(state => state.addItem);
+  const [purchaseType, setPurchaseType] = useState<'once' | 'subscription'>('once');
+
+  const handleAdd = () => {
+    addItem({
+      product,
+      quantity: 1,
+      purchaseType,
+      frequency: purchaseType === 'subscription' ? '1month' : undefined
+    });
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-end md:items-center justify-center">
+      <motion.div 
+        initial={{ opacity: 0 }} 
+        animate={{ opacity: 1 }} 
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+      />
+      <motion.div 
+        initial={{ y: "100%" }} 
+        animate={{ y: 0 }} 
+        exit={{ y: "100%" }}
+        className="bg-white w-full max-w-lg rounded-t-[2.5rem] md:rounded-[2.5rem] p-8 relative z-10 shadow-2xl"
+      >
+        <button onClick={onClose} className="absolute top-6 right-6 p-2 rounded-full hover:bg-gray-100 transition-colors">
+          <X size={20} />
+        </button>
+
+        <div className="flex gap-6 mb-8">
+          <img src={product.image} alt={product.name} className="w-24 h-24 rounded-2xl object-cover shadow-md" />
+          <div className="flex-1 pt-2">
+            <h3 className="text-xl font-bold mb-1">{product.name}</h3>
+            <p className="text-2xl font-black">¥{purchaseType === 'subscription' ? Math.round(product.price * 0.9) : product.price}</p>
+          </div>
+        </div>
+
+        <div className="space-y-6">
+          <div className="grid grid-cols-2 gap-3 p-1 bg-gray-100 rounded-2xl">
+            <button 
+              onClick={() => setPurchaseType('once')}
+              className={`py-3 rounded-xl text-sm font-bold transition-all ${purchaseType === 'once' ? 'bg-white shadow-sm' : 'text-gray-500'}`}
+            >
+              单次购买
+            </button>
+            <button 
+              onClick={() => setPurchaseType('subscription')}
+              className={`py-3 rounded-xl text-sm font-bold transition-all ${purchaseType === 'subscription' ? 'bg-white shadow-sm' : 'text-gray-500'}`}
+            >
+              周期订阅 (9折)
+            </button>
+          </div>
+
+          <button 
+            onClick={handleAdd}
+            className="w-full bg-black text-white py-5 rounded-full font-bold flex items-center justify-center gap-2 hover:bg-gray-800 transition-all shadow-xl active:scale-[0.98]"
+          >
+            <Plus size={20} />
+            加入购物车
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+};
