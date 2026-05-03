@@ -40,7 +40,12 @@ export const AuthDialog = ({ isOpen, onClose }: Props) => {
   };
 
   const handleGithubLogin = async () => {
-    await supabase.auth.signInWithOAuth({ provider: 'github' });
+    await supabase.auth.signInWithOAuth({ 
+      provider: 'github',
+      options: {
+        redirectTo: `${window.location.origin}/oauth/consent`
+      }
+    });
   };
 
   if (!isOpen) return null;
