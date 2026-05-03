@@ -12,12 +12,18 @@
 - **组件库**: 基于现有极简黑白风格（Ulinki Redesign）开发定制化无头组件 (Radix UI 或类似方案辅助)。
 - **图表与可视化**: Recharts (用于风味雷达图)
 - **海报生成**: html2canvas + 纯前端 Canvas 绘制
+- **国际化 (i18n)**: next-intl 或 react-i18next (支持多语言路由及 RTL 适配)
 
 ## 3. 分阶段实施路径
 
 ### 阶段一：基础设施与 Mock 数据搭建 (Foundation)
-- 安装必要的依赖：`zustand`, `framer-motion`, `recharts`, `lucide-react` (图标)。
+- 安装必要的依赖：`zustand`, `framer-motion`, `recharts`, `lucide-react`, `next-intl` (或同类 i18n 库)。
 - 设计全局状态管理：
+...
+### 阶段六：国际化与 RTL 适配 (Module 5)
+- **多语言架构**: 配置 `next-intl` 中间件，实现基于路径（如 `/en`, `/ar`）的语言路由。
+- **RTL 布局适配**: 为阿拉伯语设计专门的 CSS 变量及 Tailwind 插件（如 `rtl:`, `ltr:`），确保在阿拉伯语模式下 UI 整体镜像翻转。
+- **本地化字典**: 创建 `messages/` 目录，存储英语（默认）、阿拉伯语、繁体中文和西班牙语的翻译文件。
   - `useCartStore`: 购物车逻辑（支持单次购买和周期订阅）。
   - `useUserStore`: 用户画像（包含口味测试结果）。
 - 构建 Mock API 和数据结构：
