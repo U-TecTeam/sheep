@@ -5,13 +5,39 @@ import { ShoppingCart as CartIcon, User, Search, Sparkles } from 'lucide-react';
 import { useCartStore } from '../lib/store/useCartStore';
 import { TasteTestDialog } from '../components/TasteTestDialog';
 import { CommunityFeed } from '../components/CommunityFeed';
-import { motion } from 'framer-motion';
+import { AuthDialog } from '../components/AuthDialog';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import { supabase } from '../lib/supabase';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const items = useCartStore(state => state.items);
   const cartCount = items.reduce((acc, item) => acc + item.quantity, 0);
   const router = useRouter();
+  
+  const [user, setUser] = useState<any>(null);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleProfileClick = () => {
+    if (user) {
+      router.push('/profile');
+    } else {
+      setIsAuthOpen(true);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#FBFBFB] font-['Space_Grotesk'] text-black pb-20">
@@ -42,17 +68,18 @@ export default function Home() {
               )}
             </button>
             <button 
-              onClick={() => router.push('/profile')}
-              className="text-gray-400 hover:text-black transition-colors"
+              onClick={handleProfileClick}
+              className="text-gray-400 hover:text-black transition-colors flex items-center gap-2"
             >
               <User size={22} />
+              {user && <span className="text-[10px] font-black uppercase tracking-widest bg-black text-white px-2 py-0.5 rounded">Online</span>}
             </button>
           </div>
         </div>
       </nav>
 
       <main className="max-w-7xl mx-auto px-6 pt-10">
-        {/* Header Section */}
+        {/* ... (rest of the header) ... */}
         <header className="mb-12 space-y-6">
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -88,8 +115,11 @@ export default function Home() {
         <CommunityFeed />
       </main>
 
-      {/* Onboarding Dialog */}
+      {/* Onboarding & Auth Dialogs */}
       <TasteTestDialog />
+      <AnimatePresence>
+        {isAuthOpen && <AuthDialog isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />}
+      </AnimatePresence>
     </div>
   );
 }
