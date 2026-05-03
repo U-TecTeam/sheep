@@ -1,26 +1,60 @@
 'use client';
 
-import React, { useState } from 'react';
-import { mockPosts, mockProducts, Product } from '../lib/mockData';
+import React, { useState, useEffect } from 'react';
+import { Product, Post } from '../lib/mockData';
 import { Heart, MessageCircle, ShoppingBag, Plus, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../lib/store/useCartStore';
 import { useRouter } from 'next/navigation';
+import { supabase } from '../lib/supabase';
 
 export const CommunityFeed = () => {
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      const { data: postsData } = await supabase.from('posts').select('*');
+      const { data: productsData } = await supabase.from('products').select('*');
+      
+      // Transform Supabase data to match our UI interfaces
+      if (productsData) {
+        setProducts(productsData.map(p => ({
+          ...p,
+          image: p.image_url,
+          flavorProfile: p.flavor_profile,
+          roastLevel: p.roast_level
+        })));
+      }
+
+      if (postsData) {
+        setPosts(postsData.map(p => ({
+          ...p,
+          author: { name: p.author_name, avatar: p.author_avatar },
+          relatedProductId: p.related_product_id
+        })));
+      }
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
+
+  if (loading) return <div className="py-20 text-center font-bold text-gray-300">Loading your feed...</div>;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {mockPosts.map((post) => (
-        <PostCard key={post.id} post={post} />
+      {posts.map((post) => (
+        <PostCard key={post.id} post={post} allProducts={products} />
       ))}
     </div>
   );
 };
 
-const PostCard = ({ post }: { post: any }) => {
+const PostCard = ({ post, allProducts }: { post: any, allProducts: Product[] }) => {
   const router = useRouter();
   const [showSKU, setShowSKU] = useState(false);
-  const relatedProduct = mockProducts.find(p => p.id === post.relatedProductId);
+  const relatedProduct = allProducts.find(p => p.id === post.relatedProductId);
 
   return (
     <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow group">

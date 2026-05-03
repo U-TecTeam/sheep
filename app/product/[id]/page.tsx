@@ -1,14 +1,16 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { mockProducts } from '@/lib/mockData';
+import { Product } from '@/lib/mockData';
 import { FlavorRadar } from '@/components/FlavorRadar';
 import { ChevronLeft, Info, Calendar, ShoppingBag, Check } from 'lucide-react';
 import { useCartStore } from '@/lib/store/useCartStore';
 import { motion } from 'framer-motion';
+import { supabase } from '@/lib/supabase';
 
 const grindSizes = [
+  // ... (keep grindSizes)
   { id: 'whole', label: '咖啡原豆', desc: '不研磨', img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=100' },
   { id: 'coarse', label: '法压壶', desc: '粗研磨', img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=101' },
   { id: 'medium', label: '手冲/滴滤', desc: '中度研磨', img: 'https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=102' },
@@ -16,16 +18,35 @@ const grindSizes = [
 ];
 
 export default function ProductDetails() {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params.id as string;
   const router = useRouter();
-  const product = mockProducts.find(p => p.id === id);
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
   const addItem = useCartStore(state => state.addItem);
+
+  useEffect(() => {
+    async function fetchProduct() {
+      const { data } = await supabase.from('products').select('*').eq('id', id).single();
+      if (data) {
+        setProduct({
+          ...data,
+          image: data.image_url,
+          flavorProfile: data.flavor_profile,
+          roastLevel: data.roast_level
+        });
+      }
+      setLoading(false);
+    }
+    fetchProduct();
+  }, [id]);
 
   const [purchaseType, setPurchaseType] = useState<'once' | 'subscription'>('once');
   const [selectedGrind, setSelectedGrind] = useState('whole');
   const [frequency, setFrequency] = useState<'2weeks' | '1month'>('1month');
 
-  if (!product) return <div>Product not found</div>;
+  if (loading) return <div className="min-h-screen bg-white flex items-center justify-center font-bold text-gray-300">Fetching coffee details...</div>;
+  if (!product) return <div className="min-h-screen bg-white flex items-center justify-center">Product not found</div>;
 
   const handleAddToCart = () => {
     addItem({
