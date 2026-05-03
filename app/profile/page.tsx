@@ -2,7 +2,7 @@
 
 import React, { useRef } from 'react';
 import { useCartStore } from '@/lib/store/useCartStore';
-import { Calendar as CalendarIcon, Package, Share2, Plus, ArrowLeft, Camera, Settings, ChevronRight } from 'lucide-react';
+import { Calendar as CalendarIcon, Package, Share2, Plus, ArrowLeft, Camera, Settings, Coffee, ChevronRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import html2canvas from 'html2canvas';
