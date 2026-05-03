@@ -8,6 +8,7 @@
 - **框架**: Next.js 15 (App Router) + React 19
 - **样式**: Tailwind CSS + Framer Motion (用于页面过渡和微交互，如口味测试动画)
 - **状态管理**: Zustand (用于跨组件共享购物车、用户口味画像、订阅状态)
+- **图标库**: Lucide React (通用 UI) + Simple Icons via React Icons (品牌图标，如 GitHub)
 - **组件库**: 基于现有极简黑白风格（Ulinki Redesign）开发定制化无头组件 (Radix UI 或类似方案辅助)。
 - **图表与可视化**: Recharts (用于风味雷达图)
 - **海报生成**: html2canvas + 纯前端 Canvas 绘制

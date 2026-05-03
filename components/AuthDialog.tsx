@@ -3,7 +3,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { supabase } from '@/lib/supabase';
-import { X, Mail, Lock, User, Github, Coffee, ArrowRight, Loader2 } from 'lucide-react';
+import { X, Mail, Lock, User, Coffee, ArrowRight, Loader2 } from 'lucide-react';
+import { SiGithub } from 'react-icons/si';
 
 interface Props {
   isOpen: boolean;
@@ -123,7 +124,7 @@ export const AuthDialog = ({ isOpen, onClose }: Props) => {
             onClick={handleGithubLogin}
             className="w-full mt-8 py-4 border-2 border-gray-100 rounded-full flex items-center justify-center gap-3 text-sm font-bold hover:bg-gray-50 transition-all"
           >
-            <Github size={20} />
+            <SiGithub size={20} />
             GITHUB
           </button>
 
