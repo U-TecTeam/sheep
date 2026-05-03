@@ -127,5 +127,29 @@
     "date": "Date",
     "inspiration_title": "Record your brewing inspiration",
     "inspiration_desc": "Use structured templates to share ratios and temperature parameters"
+  },
+  "Post": {
+    "detail_title": "Post Detail",
+    "comments": "Comments",
+    "add_comment": "Add a comment...",
+    "shop_the_look": "Shop this Bean",
+    "brewing_params": "Brewing Parameters",
+    "ratio": "Ratio",
+    "temp": "Temp",
+    "method": "Method"
+  },
+  "Admin": {
+    "title": "Admin Dashboard",
+    "overview": "Overview",
+    "products": "Products",
+    "orders": "Orders",
+    "posts": "Posts",
+    "total_sales": "Total Sales",
+    "active_subs": "Active Subs",
+    "trending": "Trending",
+    "add_product": "Add New Product",
+    "edit": "Edit",
+    "delete": "Delete",
+    "status": "Status"
   }
 }

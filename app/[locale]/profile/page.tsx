@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useCartStore } from '@/lib/store/useCartStore';
-import { Calendar as CalendarIcon, Package, Share2, Plus, ArrowLeft, Camera, Settings, Coffee, ChevronRight } from 'lucide-react';
+import { Calendar as CalendarIcon, Package, Share2, Plus, ArrowLeft, Camera, Settings, Coffee, ChevronRight, Truck, CheckCircle2 } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import html2canvas from 'html2canvas';
 import { useTranslations } from 'next-intl';
+import { supabase } from '@/lib/supabase';
 
 export default function ProfilePage() {
   const t = useTranslations('Profile');
@@ -14,6 +15,30 @@ export default function ProfilePage() {
   const router = useRouter();
   const posterRef = useRef<HTMLDivElement>(null);
   const subscriptionItems = items.filter(i => i.purchaseType === 'subscription');
+
+  const [orders, setOrders] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchOrders() {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data } = await supabase.from('orders').select('*').eq('user_id', user.id).order('created_at', { ascending: false });
+        if (data) setOrders(data);
+      }
+      setLoading(false);
+    }
+    fetchOrders();
+  }, []);
+
+  const handleConfirmReceipt = async (orderId: string) => {
+    const { error } = await supabase.from('orders').update({ status: 'delivered' }).eq('id', orderId);
+    if (!error) {
+      setOrders(orders.map(o => o.id === orderId ? { ...o, status: 'delivered' } : o));
+      alert('Enjoy your coffee! Redirecting to share your brew note...');
+      router.push('/profile/create-post');
+    }
+  };
 
   const downloadPoster = async () => {
     if (posterRef.current) {
@@ -46,6 +71,72 @@ export default function ProfilePage() {
           <div>
             <h2 className="text-3xl font-black tracking-tighter">BREWMASTER JACK</h2>
             <p className="text-sm text-gray-400 font-bold uppercase tracking-widest mt-1">Coffee Enthusiast · Level 4</p>
+          </div>
+        </section>
+
+        {/* Recent Orders & Logistics */}
+        <section className="space-y-6">
+          <div className="flex items-center gap-2">
+            <Package size={18} />
+            <h2 className="text-sm font-bold uppercase tracking-widest">Recent Orders</h2>
+          </div>
+          
+          <div className="space-y-4">
+            {orders.length === 0 ? (
+              <p className="text-center py-10 bg-white rounded-[2rem] border-2 border-dashed border-gray-100 text-gray-300 font-bold">No orders yet</p>
+            ) : (
+              orders.map(order => (
+                <div key={order.id} className="bg-white p-8 rounded-[2.5rem] shadow-sm border border-gray-100 space-y-6">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Order ID: {order.id.slice(0, 8)}</p>
+                      <h3 className="text-lg font-black mt-1">Status: {order.status.toUpperCase()}</h3>
+                    </div>
+                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest ${order.status === 'delivered' ? 'bg-green-100 text-green-600' : 'bg-black text-white'}`}>
+                      {order.status}
+                    </span>
+                  </div>
+
+                  {order.status === 'shipped' && (
+                    <div className="space-y-8 relative before:absolute before:left-3 before:top-2 before:bottom-2 before:w-[1px] before:bg-gray-100">
+                      <div className="flex gap-6 relative">
+                        <div className="w-6 h-6 rounded-full bg-black flex items-center justify-center relative z-10 shrink-0">
+                          <Truck size={12} className="text-white" />
+                        </div>
+                        <div className="space-y-1">
+                          <p className="text-sm font-bold">In Transit - Shipped from Yunnan Roastery</p>
+                          <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Tracking: SF123456789</p>
+                        </div>
+                      </div>
+                      <button 
+                        onClick={() => handleConfirmReceipt(order.id)}
+                        className="w-full py-4 bg-black text-white rounded-2xl font-bold text-sm shadow-xl hover:bg-gray-800 transition-all"
+                      >
+                        Confirm Receipt
+                      </button>
+                    </div>
+                  )}
+
+                  {order.status === 'delivered' && (
+                    <div className="flex items-center gap-3 p-4 bg-green-50 rounded-2xl text-green-600">
+                      <CheckCircle2 size={18} />
+                      <p className="text-xs font-bold uppercase tracking-widest">Delivered on {new Date(order.updated_at).toLocaleDateString()}</p>
+                    </div>
+                  )}
+
+                  <div className="pt-4 border-t border-gray-50">
+                    <p className="text-xs font-bold text-gray-400 mb-2">ITEMS</p>
+                    <div className="flex flex-wrap gap-2">
+                      {order.items.map((item: any) => (
+                        <span key={item.id} className="px-3 py-1 bg-gray-50 rounded-lg text-[10px] font-bold">
+                          {item.name} x {item.quantity}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </section>
 
@@ -161,7 +252,10 @@ export default function ProfilePage() {
             <h2 className="text-xl font-bold">{t('inspiration_title')}</h2>
             <p className="text-xs text-gray-400 font-medium">{t('inspiration_desc')}</p>
           </div>
-          <button className="w-14 h-14 bg-white text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform">
+          <button 
+            onClick={() => router.push('/profile/create-post')}
+            className="w-14 h-14 bg-white text-black rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+          >
             <Plus size={24} />
           </button>
         </section>

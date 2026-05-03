@@ -127,5 +127,29 @@
     "date": "日期",
     "inspiration_title": "記錄你的沖煮靈感",
     "inspiration_desc": "使用結構化模板，分享粉水比與水溫參數"
+  },
+  "Post": {
+    "detail_title": "筆記詳情",
+    "comments": "全部評論",
+    "add_comment": "添加評論...",
+    "shop_the_look": "同款咖啡豆",
+    "brewing_params": "沖煮參數",
+    "ratio": "粉水比",
+    "temp": "水溫",
+    "method": "器具"
+  },
+  "Admin": {
+    "title": "管理後台",
+    "overview": "概覽",
+    "products": "產品管理",
+    "orders": "訂單與訂閱",
+    "posts": "內容管理",
+    "total_sales": "銷售總額",
+    "active_subs": "有效訂閱",
+    "trending": "熱門豆款",
+    "add_product": "添加新產品",
+    "edit": "編輯",
+    "delete": "刪除",
+    "status": "狀態"
   }
 }

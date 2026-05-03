@@ -60,15 +60,15 @@ const PostCard = ({ post, allProducts }: { post: Post, allProducts: Product[] })
   const relatedProduct = allProducts.find(p => p.id === post.relatedProductId);
 
   return (
-    <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow group">
+    <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow group cursor-pointer" onClick={() => router.push(`/post/${post.id}`)}>
       <div className="relative aspect-[4/5] overflow-hidden">
         <img src={post.images[0]} alt="Post" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
         
         {/* Quick Buy Overlay */}
         {relatedProduct && (
-          <div className="absolute bottom-4 left-4 right-4">
+          <div className="absolute bottom-4 left-4 right-4" onClick={(e) => e.stopPropagation()}>
               <button 
-                onClick={() => router.push(`/product/${relatedProduct.id}`)}
+                onClick={() => setShowSKU(true)}
                 className="w-full bg-white/90 backdrop-blur-md text-black py-3 rounded-2xl flex items-center justify-center gap-2 text-sm font-bold shadow-lg hover:bg-black hover:text-white transition-all"
               >
                 <ShoppingBag size={18} />

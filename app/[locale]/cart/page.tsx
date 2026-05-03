@@ -6,6 +6,7 @@ import { ShoppingBag, Truck, MapPin, ChevronRight, Package, Coffee, Trash2, Chec
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { useTranslations } from 'next-intl';
+import { supabase } from '@/lib/supabase';
 
 interface ParsedAddress {
   name: string;
@@ -24,6 +25,8 @@ export default function CartPage() {
   const remainingForFreeShipping = Math.max(0, shippingThreshold - total);
   const progress = Math.min(100, (total / shippingThreshold) * 100);
 
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
   const handleParseAddress = () => {
     // Simple mock parsing logic
     const phoneMatch = addressInput.match(/1[3-9]\d{9}/);
@@ -35,6 +38,44 @@ export default function CartPage() {
         phone: phoneMatch ? phoneMatch[0] : '识别失败',
         address: addressInput.replace(phoneMatch ? phoneMatch[0] : '', '').replace(nameMatch ? nameMatch[0] : '', '').trim()
       });
+    }
+  };
+
+  const handleCheckout = async () => {
+    setIsCheckingOut(true);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        alert('Please login to checkout');
+        return;
+      }
+
+      // Create a mock order
+      const { error } = await supabase.from('orders').insert({
+        user_id: user.id,
+        items: items.map(i => ({
+          id: i.product.id,
+          name: i.product.name,
+          quantity: i.quantity,
+          purchaseType: i.purchaseType
+        })),
+        total_amount: total,
+        status: 'pending',
+        shipping_address: parsedAddress || { address: addressInput }
+      });
+
+      if (error) throw error;
+      
+      // Clear cart (mock)
+      items.forEach(i => removeItem(i.product.id, i.purchaseType));
+      
+      alert('Order placed successfully!');
+      router.push('/profile');
+    } catch (err) {
+      console.error(err);
+      alert('Checkout failed');
+    } finally {
+      setIsCheckingOut(false);
     }
   };
 
@@ -207,11 +248,12 @@ export default function CartPage() {
             <p className="text-3xl font-black">¥{total}</p>
           </div>
           <button 
-            disabled={items.length === 0}
+            onClick={handleCheckout}
+            disabled={items.length === 0 || isCheckingOut}
             className="px-12 py-5 bg-black text-white rounded-full font-bold shadow-2xl hover:bg-gray-800 transition-all disabled:opacity-30 disabled:grayscale flex items-center gap-2"
           >
-            {t('checkout')}
-            <ChevronRight size={18} />
+            {isCheckingOut ? 'Processing...' : t('checkout')}
+            {!isCheckingOut && <ChevronRight size={18} />}
           </button>
         </div>
       </footer>
